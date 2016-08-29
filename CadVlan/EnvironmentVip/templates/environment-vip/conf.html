@@ -51,16 +51,25 @@ $(document).ready(function() {
 		<li><span class="ui-icon ui-icon-triangle-1-e page_tab_icon"></span><a href="#tabs-1">Edição de Ambiente VIP</a></li>
 	</ul>
 	<div id="tabs-1">
-		<form id="add_form" method="post" action="{% url environment-vip.edit id_vip %}">
+		<form id="add_form" method="post" action="{% url environment-vip.conf.form id_vip %}">
 			{% csrf_token %}
 			<div id="fields" class="ui-widget-content">
 				<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 				<p>Chaves</p>
+
+				<input type="hidden" value="{{forms.keys|length}}" name="forms_keys_len" >
 				{% for keys in forms.keys %}
+				{% with forloop.counter as a %}
+					<input type="hidden" value="{{keys.items|length}}" name="keys_items_len_{{a}}" >
 					{% for key, value in keys.items %}
+					{% with forloop.counter as b %}
+
 						<label>{{key}}</label>
-						<input type="text" value="{{value}}">
+						<input type="hidden" value="{{key}}" name="chaves_label_{{ a }}_{{ b }}">
+						<input type="text" value="{{value}}" name="chaves_input_{{ a }}_{{ b }}">
+					{% endwith %}
 					{% endfor %}
+				{% endwith %}
 				{% endfor %}
 				</div>
 
@@ -71,27 +80,40 @@ $(document).ready(function() {
 
 				<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 				<p>Layers</p>
+				<input type="hidden" value="{{forms.layers|length}}" name="forms_layers_len" >
 				{% for layer in forms.layers %}
+				{% with forloop.counter as a %}
+					<input type="hidden" value="{{layer.requiments|length}}" name="layer_requiments_len_{{a}}" >
 
 					{% for requiment in layer.requiments %}
+					{% with forloop.counter as b %}
 					<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 						<label>_name</label>
-						<input type="text" value="{{ requiment|get:'_name' }}">
+						<input type="text" value="{{ layer|get:'_name' }}" name="layers_input_{{a}}_{{b}}">
+
+
 						<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
+							<input type="hidden" value="{{requiment.condicionals|length}}" name="requiment_condicionals_b1_len_{{a}}_{{b}}" >
 							{% for condicional in requiment.condicionals %}
+							{% with forloop.counter as c %}
 							<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 								<p>Usar:</p>
 								<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
+								<input type="hidden" value="{{condicional.use|length}}" name="condicional_use_c1_len_{{a}}_{{b}}_{{c}}" >
 								{% for form in condicional.use %}
+								{% with forloop.counter as d %}
 									<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 										<div>
 											<label>_name</label>
-											<input type="text" value="{{ form|get:'_name' }}">
+											<input type="text" value="{{ form|get:'_name' }}" name="layers_input_{{ a }}_{{ b }}_{{ c }}_{{ d }}">
 											<div>
 												<label>eqpts</label>
 												<div>
+												<input type="hidden" value="{{form.eqpts|length}}" name="form_eqpts_len_{{a}}_{{b}}_{{c}}_{{d}}" >
 												{% for value in form.eqpts %}
-													<input type="text" value="{{value}}">
+												{% with forloop.counter as e %}
+													<input type="text" value="{{value}}" name="layers_input_{{ a }}_{{ b }}_{{ c }}_{{ d }}_{{ e }}">
+												{% endwith %}
 												{% endfor %}
 												</div>
 											</div>
@@ -99,36 +121,54 @@ $(document).ready(function() {
 									</div>
 									<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 										<label>definitions</label>
+										<input type="hidden" value="{{form.definitions|length}}" name="form_definitions_len_{{a}}_{{b}}_{{c}}_{{d}}" >
 										{% for definition in form.definitions %}
+										{% with forloop.counter as e %}
 										<div>
+											<input type="hidden" value="{{definition.items|length}}" name="definition_items_len_{{a}}_{{b}}_{{c}}_{{d}}_{{e}}" >
 											{% for key, value in definition.items %}
+											{% with forloop.counter as f %}
 												<label>{{key}}</label>
-												<input type="text" value="{{value}}">
+												<input type="hidden" value="{{ key }}" name="layers_label_d1_{{ a }}_{{ b }}_{{ c }}_{{ d }}_{{ e }}_{{ f }}">
+												<input type="text" value="{{value}}" name="layers_input_d1_{{ a }}_{{ b }}_{{ c }}_{{ d }}_{{ e }}_{{ f }}">
+											{% endwith %}
 											{% endfor %}
 										</div>
+										{% endwith %}
 										{% endfor %}
 									</div>
 
 									<br>
+								{% endwith %}
 								{% endfor %}
 								</div>
 							</div>
 							<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 								<p>Quando:</p>
+								<input type="hidden" value="{{condicional.validations|length}}" name="condicional_validations_c1_len_{{a}}_{{b}}_{{c}}" >
 								{% for form in condicional.validations %}
+								{% with forloop.counter as d %}
 									<div>
+									<input type="hidden" value="{{form.items|length}}" name="form_items_d2_len_{{a}}_{{b}}_{{c}}_{{d}}" >
 									{% for key, value in form.items %}
+									{% with forloop.counter as e %}
 										<label>{{key}}</label>
-										<input type="text" value="{{value}}">
+										<input type="hidden" value="{{key}}" name="layers_label_d2_{{ a }}_{{ b }}_{{ c }}_{{ d }}_{{ e }}">
+										<input type="text" value="{{value}}" name="layers_input_d2_{{ a }}_{{ b }}_{{ c }}_{{ d }}_{{ e }}">
+									{% endwith %}
 									{% endfor %}
 									</div>
+								{% endwith %}
 								{% endfor %}
 							</div>
 							<br>
+							{% endwith %}
 							{% endfor %}
 						</div>
 					</div>
+					{% endwith %}
 					{% endfor %}
+				{% endwith %}
 				{% endfor %}
 				</div>
 
@@ -136,38 +176,58 @@ $(document).ready(function() {
 
 				<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 				<p>Opções Vip Estendidas</p>
+				<input type="hidden" value="{{forms.optionsvip_extended.requiments|length}}" name="forms_optionsvip_extended_requiments_len" >
 				{% for requiment in forms.optionsvip_extended.requiments %}
+				{% with forloop.counter as a %}
 					<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 						<label>_name</label>
-						<input type="text" value="{{ requiment|get:'_name' }}">
+						<input type="text" value="{{ requiment|get:'_name' }}" name="optionsvip_input_{{ a }}">>
 						<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
+							<input type="hidden" value="{{requiment.condicionals|length}}" name="requiment_condicionals_a1_len_{{a}}" >
 							{% for condicional in requiment.condicionals %}
+							{% with forloop.counter as b %}
 							<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 								<p>Usar:</p>
+								<input type="hidden" value="{{condicional.use|length}}" name="condicional_use_b1_len_{{a}}_{{b}}" >
 								{% for form in condicional.use %}
+								{% with forloop.counter as c %}
 									<div>
+									<input type="hidden" value="{{form.items|length}}" name="form_items_c1_len_{{a}}_{{b}}_{{c}}" >
 									{% for key, value in form.items %}
+									{% with forloop.counter as d %}
 										<label>{{key}}</label>
-										<input type="text" value="{{value}}">
+										<input type="hidden" value="{{ key }}" name="optionsvip_label_c1_{{ a }}_{{ b }}_{{ c }}_{{ d }}">
+										<input type="text" value="{{value}}" name="optionsvip_input_c1_{{ a }}_{{ b }}_{{ c }}_{{ d }}">
+									{% endwith %}
 									{% endfor %}
 									</div>
+								{% endwith %}
 								{% endfor %}
 							</div>
 							<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 								<p>Quando:</p>
+								<input type="hidden" value="{{condicional.validations|length}}" name="condicional_validations_b1_len_{{a}}_{{b}}" >
 								{% for form in condicional.validations %}
+								{% with forloop.counter as c %}
 									<div>
+									<input type="hidden" value="{{form.items|length}}" name="form_items_c2_len_{{a}}_{{b}}_{{c}}" >
 									{% for key, value in form.items %}
+									{% with forloop.counter as d %}
 										<label>{{key}}</label>
-										<input type="text" value="{{value}}">
+										<input type="hidden" value="{{key}}" name="optionsvip_label_c2_{{ a }}_{{ b }}_{{ c }}_{{ d }}">
+										<input type="text" value="{{value}}" name="optionsvip_input_c2_{{ a }}_{{ b }}_{{ c }}_{{ d }}">
+									{% endwith %}
 									{% endfor %}
 									</div>
+								{% endwith %}
 								{% endfor %}
 							</div>
 							<br>
+							{% endwith %}
 							{% endfor %}
 						</div>
 					</div>
+				{% endwith %}
 				{% endfor %}
 				</div>
 			</div>

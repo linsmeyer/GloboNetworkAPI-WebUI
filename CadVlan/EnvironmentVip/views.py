@@ -238,6 +238,125 @@ def conf_form(request, id_environmentvip):
 
         lists['forms'] = conf.get('conf')
 
+        if request.method == "POST":
+            dicionario = {}
+            dicionario["conf"] = {}
+
+            del conf["conf"]["optionsvip_extended"]
+            logger.error("printando json original do banco")
+            logger.error(json.dumps(conf))
+
+            logger.error("printando json gerado pela resposta da pagina...")
+
+            # CHAVES
+            logger.error("chaves")
+            dicionario["conf"]["keys"] = []
+            dicionario["conf"]["keys"].append({})
+            forms_keys_len = int(request.POST.getlist('forms_keys_len')[0])
+            for a in range(forms_keys_len):
+                keys_items_len = int(request.POST.getlist('keys_items_len_' + str(a + 1))[0])
+                for b in range(keys_items_len):
+                    logger.error(request.POST.getlist("chaves_label_" + str(a + 1) + "_" + str(b + 1))[0])
+                    logger.error(request.POST.getlist("chaves_input_" + str(a + 1) + "_" + str(b + 1))[0])
+
+                    dicionario["conf"]["keys"][a][request.POST.getlist("chaves_label_" + str(a + 1) + "_" + str(b + 1))[0]] = request.POST.getlist("chaves_input_" + str(a + 1) + "_" + str(b + 1))[0]
+
+            # LAYERS
+            dicionario["conf"]["layers"] = []
+            logger.error("layers")
+            forms_layers_len = int(request.POST.getlist('forms_layers_len')[0])
+            for a in range(forms_layers_len):
+                dicionario["conf"]["layers"].append({})
+                layer_requiments_len = int(request.POST.getlist('layer_requiments_len_' + str(a + 1))[0])
+                dicionario["conf"]["layers"][a]["requiments"] = []
+                for b in range(layer_requiments_len):
+                    # ver o lance do layers input e do _name
+
+                    dicionario["conf"]["layers"][a]["_name"] = request.POST.getlist("layers_input_" + str(a + 1) + "_" + str(b + 1))[0]
+                    dicionario["conf"]["layers"][a]["requiments"].append({})
+
+                    logger.error("_name")
+                    logger.error(request.POST.getlist("layers_input_" + str(a + 1) + "_" + str(b + 1))[0])
+
+                    requiment_condicionals_b1_len = int(request.POST.getlist("requiment_condicionals_b1_len_" + str(a + 1) + "_" + str(b + 1))[0])
+                    dicionario["conf"]["layers"][a]["requiments"][b]["condicionals"] = []
+                    for c in range(requiment_condicionals_b1_len):
+
+                        condicional_use_c1_len = int(request.POST.getlist("condicional_use_c1_len_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1))[0])
+                        logger.error("var c: " + str(c))
+                        dicionario["conf"]["layers"][a]["requiments"][b]["condicionals"].append({})
+                        dicionario["conf"]["layers"][a]["requiments"][b]["condicionals"][c]["use"] = []
+                        dicionario["conf"]["layers"][a]["requiments"][b]["condicionals"][c]["validations"] = []
+
+                        for d in range(condicional_use_c1_len):
+                            dicionario["conf"]["layers"][a]["requiments"][b]["condicionals"][c]["use"].append({})
+                            # errado eu acho dicionario["conf"]["layers"][a]["requiments"][b]["condicionals"][c]["validations"].append({})
+
+                            dicionario["conf"]["layers"][a]["requiments"][b]["condicionals"][c]["use"][d]["_name"] = request.POST.getlist("layers_input_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1) + "_" + str(d + 1))[0]
+                            dicionario["conf"]["layers"][a]["requiments"][b]["condicionals"][c]["use"][d]["definitions"] = []
+                            dicionario["conf"]["layers"][a]["requiments"][b]["condicionals"][c]["use"][d]["eqpts"] = []
+
+                            logger.error("_name")
+                            logger.error(request.POST.getlist("layers_input_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1) + "_" + str(d + 1))[0])
+
+                            logger.error("eqpts")
+                            form_eqpts_len = int(request.POST.getlist("form_eqpts_len_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1) + "_" + str(d + 1))[0])
+                            for e in range(form_eqpts_len):
+                                dicionario["conf"]["layers"][a]["requiments"][b]["condicionals"][c]["use"][d]["eqpts"].append(int(request.POST.getlist("layers_input_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1) + "_" + str(d + 1) + "_" + str(e + 1))[0]))
+
+                                logger.error(request.POST.getlist("layers_input_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1) + "_" + str(d + 1) + "_" + str(e + 1))[0])
+
+                            logger.error("definitions")
+                            form_definitions_len = int(request.POST.getlist("form_definitions_len_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1) + "_" + str(d + 1))[0])
+                            for e in range(form_definitions_len):
+                                definition_items_len = int(request.POST.getlist("definition_items_len_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1) + "_" + str(d + 1) + "_" + str(e + 1))[0])
+                                dicionario["conf"]["layers"][a]["requiments"][b]["condicionals"][c]["use"][d]["definitions"].append({})
+
+                                for f in range(definition_items_len):
+                                    dicionario["conf"]["layers"][a]["requiments"][b]["condicionals"][c]["use"][d]["definitions"][e][request.POST.getlist("layers_label_d1_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1) + "_" + str(d + 1) + "_" + str(e + 1) + "_" + str(f + 1))[0]] = request.POST.getlist("layers_input_d1_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1) + "_" + str(d + 1) + "_" + str(e + 1) + "_" + str(f + 1))[0]
+                                    logger.error(request.POST.getlist("layers_label_d1_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1) + "_" + str(d + 1) + "_" + str(e + 1) + "_" + str(f + 1))[0])
+                                    logger.error(request.POST.getlist("layers_input_d1_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1) + "_" + str(d + 1) + "_" + str(e + 1) + "_" + str(f + 1))[0])
+                        condicional_validations_c1_len = int(request.POST.getlist("condicional_validations_c1_len_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1))[0])
+                        for d in range(condicional_validations_c1_len):
+                            form_items_d2_len = int(request.POST.getlist("form_items_d2_len_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1) + "_" + str(d + 1))[0])
+                            dicionario["conf"]["layers"][a]["requiments"][b]["condicionals"][c]["validations"].append({})
+
+                            for e in range(form_items_d2_len):
+                                dicionario["conf"]["layers"][a]["requiments"][b]["condicionals"][c]["validations"][d][request.POST.getlist("layers_label_d2_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1) + "_" + str(d + 1) + "_" + str(e + 1))[0]] = request.POST.getlist("layers_input_d2_" + str(a + 1) + "_" + str(b + 1) + "_" + str(c + 1) + "_" + str(d + 1) + "_" + str(e + 1))[0]
+                                # logger.error(request.POST.getlist("layers_label_d2_"+str(a+1)+"_"+str(b+1)+"_"+str(c+1)+"_"+str(d+1)+"_"+str(e+1))[0])
+                                # logger.error(request.POST.getlist("layers_input_d2_"+str(a+1)+"_"+str(b+1)+"_"+str(c+1)+"_"+str(d+1)+"_"+str(e+1))[0])
+
+            # dicionario["conf"]["layers"] = []
+            # dicionario["conf"]["layers"].append({})
+            # dicionario["conf"]["layers"][0]["requiments"] = []
+            # dicionario["conf"]["layers"][0]["requiments"][0] = {}
+            # len_forms_layers = int(request.POST.getlist('len_forms_layers')[0])
+            # for i in range(len_forms_layers):
+            #     len_layer_requiments = int(request.POST.getlist('len_layer_requiments_' + str(i + 1))[0])
+            #     for j in range(len_layer_requiments):
+            #         pass
+
+            # OPTIONSVIP_EXTENDED
+            logger.error("optionsvip_extended")
+            dicionario["conf"]["optionsvip_extended"] = []
+
+            forms_optionsvip_extended_requiments_len = int(request.POST.getlist("forms_optionsvip_extended_requiments_len")[0])
+            for a in range(forms_optionsvip_extended_requiments_len):
+                pass
+
+            if(dicionario == conf):
+                logger.error("Eh igual!")
+            else:
+                logger.error("Nao eh igual")
+
+            # logger.error(dicionario)
+
+            logger.error(json.dumps(dicionario))
+
+            # logger.error(request.POST.getlist('chaves_1')[0])
+            # json_str  = form.cleaned_data['json']
+            # logger.error("json %s" % json_str)
+
     except NetworkAPIClientError, e:
         logger.error(e)
         messages.add_message(request, messages.ERROR, e)
