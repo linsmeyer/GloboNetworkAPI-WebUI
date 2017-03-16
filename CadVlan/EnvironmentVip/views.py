@@ -221,9 +221,10 @@ def add_form(request):
 @has_perm([{"permission": ENVIRONMENT_VIP, "write": True}])
 def conf_form(request, id_environmentvip):
 
+    lists = dict()
+
     try:
 
-        lists = dict()
         # Get user
         auth = AuthSession(request.session)
         client = auth.get_clientFactory()

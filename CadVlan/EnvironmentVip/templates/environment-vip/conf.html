@@ -41,7 +41,78 @@ $(document).ready(function() {
 	$(".pickList_remove").button({ icons: {primary: "ui-icon-arrowthick-1-n"}, text: false });
 	$(".pickList_removeAll").button({ icons: {primary: "ui-icon-arrowthickstop-1-n"}, text: false });
 
-})
+	json_creator.set_chaves_counter(parseInt($("#chaves_counter").val()));
+
+});
+
+String.prototype.format = function() {
+    var formatted = this;
+    for (var i = 0; i < arguments.length; i++) {
+        var regexp = new RegExp('\\{'+i+'\\}', 'gi');
+        formatted = formatted.replace(regexp, arguments[i]);
+    }
+    return formatted;
+};
+
+function removeChavesFields(button){
+
+    $(button).parent().remove();
+    json_creator.sub_chaves_counter();
+
+    if (json_creator.get_chaves_counter() > 0 ){
+        console.log("counter "+ json_creator.get_chaves_counter());
+        var div = $("#chaves_div_{0}".format(json_creator.get_chaves_counter()));
+        var btnRemove = $("<input id=\"chaves_btn_remove\" type=\"button\" value=\"-\" onclick=\"removeChavesFields(this)\"/>");
+        div.append(btnRemove);
+    }
+}
+
+function addChavesFields(){
+    $("#chaves_btn_remove").remove();
+
+    json_creator.add_chaves_counter();
+
+    var div = $("<div id=\"chaves_div_{0}\" />".format(json_creator.get_chaves_counter()));
+    var key = $("<input type=\"text\" id=\"chaves_key_{0}\" />".format(json_creator.get_chaves_counter()));
+    var value = $("<input type=\"text\" id=\"chaves_value_{0}\" />".format(json_creator.get_chaves_counter()));
+    var btnRemove = $("<input id=\"chaves_btn_remove\" type=\"button\" value=\"-\" onclick=\"removeChavesFields(this)\"/>");
+
+    div.append(key);
+    div.append(value);
+    div.append(btnRemove);
+
+    $("#chaves").append(div);
+
+    console.log(key);
+    console.log(value);
+
+}
+
+function JSONCreator(){
+    this.chaves_counter = 0
+}
+
+JSONCreator.prototype.get_chaves_counter = function () {
+    return this.chaves_counter;
+};
+
+JSONCreator.prototype.set_chaves_counter = function (chaves_counter) {
+    this.chaves_counter = chaves_counter;
+};
+
+JSONCreator.prototype.add_chaves_counter = function () {
+    this.chaves_counter += 1;
+};
+
+JSONCreator.prototype.sub_chaves_counter = function (){
+    this.chaves_counter -= 1;
+};
+
+var json_creator = new JSONCreator();
+
+
+
+
 </script>
 {% endblock %}
 
@@ -54,13 +125,24 @@ $(document).ready(function() {
 		<form id="add_form" method="post" action="{% url environment-vip.edit id_vip %}">
 			{% csrf_token %}
 			<div id="fields" class="ui-widget-content">
-				<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
-				<p>Chaves</p>
-				{% for keys in forms.keys %}
-					{% for key, value in keys.items %}
-						<label>{{key}}</label>
-						<input type="text" value="{{value}}">
-					{% endfor %}
+				<div id="chaves" class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
+				<p>
+                    Chaves
+                    <input type="button" value="+" onclick="addChavesFields()" />
+                </p>
+
+                <input type="hidden" id="chaves_counter" value="{{ forms.keys.0.items|length }}"/>
+
+                {% for key, value in forms.keys.0.items %}
+
+                    <div id="chaves_div_{{ forloop.counter }}">
+                        <input type="text" value="{{key}}" id="chaves_key_{{ forloop.counter }}" />
+                        <input type="text" value="{{value}}" id="chaves_value_{{ forloop.counter }}" />
+                        {% if forloop.last %}
+                            <input id="chaves_btn_remove" type="button" value="-" onclick="removeChavesFields(this)"/>
+                        {% endif %}
+                    </div>
+
 				{% endfor %}
 				</div>
 
