@@ -64,6 +64,7 @@ String.prototype.format = function() {
     return formatted;
 };
 
+/* JSON Editor Chaves Functions Handlers */
 function addChavesFields(){
 
     json_creator.add_chaves_counter();
@@ -95,6 +96,7 @@ function removeChavesFields(button){
 
 }
 
+/* JSON Editor Layers Functions Handlers */
 function addLayersReqFields(){
 
     json_creator.add_layers_req_counter();
@@ -108,12 +110,20 @@ function addLayersReqFields(){
 
     div.append(btnAdd);
 
+    var br = $("<br />");
+
+    div.append(br);
+    div.append(br);
+    div.append(br);
+
     $("#layers").append(div);
 
 }
 
 function addLayersReqCondFields(layer_req_cond){
     json_creator.add_layers_req_cond_counter();
+
+    var span = $("<span />");
 
     var div1 = $("<div class=\"ui-widget-content\" style=\"padding: 15px 15px 15px 15px;\" />");
 
@@ -138,9 +148,21 @@ function addLayersReqCondFields(layer_req_cond){
 
     var br = $("<br />");
 
-    $(layer_req_cond).parent().append(div1);
-    $(layer_req_cond).parent().append(div2);
-    $(layer_req_cond).parent().append(br);
+    var btn_remove = $("<input type=\"button\" value=\"-\" onclick=\"removeLayersReqCondFields(this)\" />");
+
+    span.append(btn_remove);
+    span.append(div1);
+    span.append(div2);
+    span.append(br);
+
+    $(layer_req_cond).parent().append(span);
+
+}
+
+function removeLayersReqCondFields(layer_req_cond){
+
+    $(layer_req_cond).parent().remove();
+
 }
 
 function addLayersReqCondUsarFields(layer_req_cond_usar){
@@ -281,6 +303,153 @@ function removeLayersReqCondQuandoFields(layer_req_cond_quando){
     $(layer_req_cond_quando).parent().remove();
 }
 
+/* JSON Editor Opcoes Vip Estendidas Functions Handlers */
+
+function addOpcVipEstsReqFields(opcvipest_req){
+    var div = $("<div class=\"ui-widget-content\" style=\"padding: 15px 15px 15px 15px;\" />");
+
+    var label = $("<label>_name</label>");
+    var input = $("<input type=\"text\" />");
+
+    var btn_remove = $("<input type=\"button\" value=\"-\" onclick=\"removeOpcVipEstsReqFields(this)\"/>");
+
+    var btn_add = $("<input type=\"button\" value=\"+\" onclick=\"addOpcVipEstsReqCondFields(this)\"/>");
+
+    var div_inside = $("<div class=\"ui-widget-content\" style=\"padding: 15px 15px 15px 15px;\" />");
+
+    div.append(btn_add);
+    div.append(label);
+    div.append(input);
+
+    div.append(btn_remove);
+
+    div.append(div_inside);
+
+    $(opcvipest_req).parent().append(div);
+}
+
+function removeOpcVipEstsReqFields(opcvipest_req){
+
+    $(opcvipest_req).parent().remove();
+
+}
+
+function addOpcVipEstsReqCondFields(opcvipest_req_cond){
+    var span = $("<span />");
+
+    var div1 = $("<div class=\"ui-widget-content\" style=\"padding: 15px 15px 15px 15px;\" />");
+
+    var p1 = $("<p>Usar:</p>");
+
+    var btn_add_usar = $("<input type=\"button\" value=\"+\" onclick=\"addOpcVipEstsReqCondUsarFields(this)\"/>");
+
+    div1.append(p1);
+
+    div1.append(btn_add_usar);
+
+    var div2 = $("<div class=\"ui-widget-content\" style=\"padding: 15px 15px 15px 15px;\" />");
+
+    var p2 = $("<p>Quando:</p>");
+
+    var btn_add_quando = $("<input type=\"button\" value=\"+\" onclick=\"addOpcVipEstsReqCondQuandoFields(this)\"/>");
+
+    div2.append(p2);
+
+    div2.append(btn_add_quando);
+
+    var br = $("<br />");
+
+    var btn_remove = $("<input type=\"button\" value=\"-\" onclick=\"removeOpcVipEstsReqCondFields(this)\"/>");
+
+    span.append(btn_remove);
+    span.append(div1);
+    span.append(div2);
+    span.append(br);
+
+    $(opcvipest_req_cond).parent().children('div').append(span);
+}
+
+function removeOpcVipEstsReqCondFields(opcvipest_req_cond){
+
+     $(opcvipest_req_cond).parent().remove();
+
+}
+
+function addOpcVipEstsReqCondUsarFields(opcvipest_req_cond_usar){
+
+    var label_type = $("<label>type</label>");
+    var input_type = $("<input type=\"text\" />");
+
+    var label_value = $("<label>value</label>");
+    var input_value = $("<input type=\"text\" />");
+
+    var btn_remove = $("<input type=\"button\" value=\"-\" onclick=\"removeOpcVipEstsReqCondUsarFields(this)\"/>");
+
+    var div = $("<div />");
+
+    div.append(label_type);
+    div.append(input_type);
+
+    div.append(label_value);
+    div.append(input_value);
+
+    div.append(btn_remove);
+
+    $(opcvipest_req_cond_usar).parent().append(div);
+
+}
+
+function removeOpcVipEstsReqCondUsarFields(opcvipest_req_cond_usar){
+    $(opcvipest_req_cond_usar).parent().remove();
+}
+
+function addOpcVipEstsReqCondQuandoFields(opcvipest_req_cond_usar){
+
+    var label_operator = $("<label>operator</label>");
+    var input_operator = $("<input type=\"text\" />");
+
+    var label_variable = $("<label>variable</label>");
+    var input_variable = $("<input type=\"text\" />");
+
+    var label_type = $("<label>type</label>");
+    var input_type = $("<input type=\"text\" />");
+
+    var label_value = $("<label>value</label>");
+    var input_value = $("<input type=\"text\" />");
+
+    var label_name = $("<label>name</label>");
+    var input_name = $("<input type=\"text\" />");
+
+    var btn_remove = $("<input type=\"button\" value=\"-\" onclick=\"removeOpcVipEstsReqCondQuandoFields(this)\"/>");
+
+    var div = $("<div />");
+
+    div.append(label_operator);
+    div.append(input_operator);
+
+    div.append(label_variable);
+    div.append(input_variable);
+
+    div.append(label_type);
+    div.append(input_type);
+
+    div.append(label_value);
+    div.append(input_value);
+
+    div.append(label_name);
+    div.append(input_name);
+
+    div.append(btn_remove);
+
+    $(opcvipest_req_cond_usar).parent().append(div);
+
+}
+
+function removeOpcVipEstsReqCondQuandoFields(opcvipest_req_cond_usar){
+    $(opcvipest_req_cond_usar).parent().remove();
+}
+
+/* Class JSONCreator to json editor */
 function JSONCreator(){
     /* Variables that ends with 'inf' means infinite. Its used to generate HTML ids.*/
 
@@ -565,36 +734,41 @@ var json_creator = new JSONCreator();
 				<div class="separator spacer"></div>
 
 				<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
-				<p>Opções Vip Estendidas</p>
+				<p>
+                    Opções Vip Estendidas
+                    <input type="button" value="+" onclick="addOpcVipEstsReqFields(this)" />
+                </p>
 				{% for requiment in forms.optionsvip_extended.requiments %}
 					<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 						<label>_name</label>
 						<input type="text" value="{{ requiment|get:'_name' }}">
 						<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 							{% for condicional in requiment.condicionals %}
-							<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
-								<p>Usar:</p>
-								{% for form in condicional.use %}
-									<div>
-									{% for key, value in form.items %}
-										<label>{{key}}</label>
-										<input type="text" value="{{value}}">
-									{% endfor %}
-									</div>
-								{% endfor %}
-							</div>
-							<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
-								<p>Quando:</p>
-								{% for form in condicional.validations %}
-									<div>
-									{% for key, value in form.items %}
-										<label>{{key}}</label>
-										<input type="text" value="{{value}}">
-									{% endfor %}
-									</div>
-								{% endfor %}
-							</div>
-							<br>
+                                <span>
+                                    <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
+                                        <p>Usar:</p>
+                                        {% for form in condicional.use %}
+                                            <div>
+                                            {% for key, value in form.items %}
+                                                <label>{{key}}</label>
+                                                <input type="text" value="{{value}}">
+                                            {% endfor %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
+                                        <p>Quando:</p>
+                                        {% for form in condicional.validations %}
+                                            <div>
+                                            {% for key, value in form.items %}
+                                                <label>{{key}}</label>
+                                                <input type="text" value="{{value}}">
+                                            {% endfor %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <br />
+                                </span>
 							{% endfor %}
 						</div>
 					</div>
