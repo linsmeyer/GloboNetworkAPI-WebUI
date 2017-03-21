@@ -240,13 +240,18 @@ function removeLayersReqCondUsarFields(layer_req_cond_usar){
 }
 
 function addLayersReqCondUsarDefinitionsFields(layer_req_cond_usar_definition){
+
+    var str_ = $(layer_req_cond_usar_definition).parent().children('input:hidden').val();
+
+    var counterInf = parseInt(findMaxValue($("input[name^={0}]".format(str_)),str_)/2) + 1;
+
     var div = $("<div />");
 
     var label_type = $("<label>type</label>") ;
-    var input_type = $("<input type=\"text\" />");
+    var input_type = $("<input name=\"{0}{1}\" type=\"text\" />");
 
     var label_value = $("<label>value</label>") ;
-    var input_value = $("<input type=\"text\" />");
+    var input_value = $("<input name=\"{0}{1}\" type=\"text\" />");
 
     var btn_remove = $("<input type=\"button\" value=\"-\" onclick=\"removeLayersReqCondUsarDefinitionsFields(this)\"/>");
 
@@ -267,9 +272,13 @@ function removeLayersReqCondUsarDefinitionsFields(layer_req_cond_usar_definition
 
 function addLayersReqCondUsarEqptsFields(layer_req_cond_usar_eqpt){
 
+    var str_ = $(layer_req_cond_usar_eqpt).parent().children('div').children('input:hidden').val();
+
+    var counterInf = findMaxValue($("input[name^={0}]".format(str_)),str_) + 1;
+
     var span = $("<span />");
 
-    var input = $("<input type=\"text\" />");
+    var input = $("<input name=\"{0}{1}\" type=\"text\" />".format(str_, counterInf));
     var btn_remove = $("<input type=\"button\" value=\"-\" onclick=\"removeLayersReqCondUsarEqptsFields(this)\" />");
 
     span.append(input);
@@ -719,7 +728,7 @@ var json_creator = new JSONCreator();
                                                 <label>eqpts</label>
                                                 <input type="button" value="+" onclick="addLayersReqCondUsarEqptsFields(this)" />
                                                 <div>
-                                                <input type="hidden" value="layer_eqpt_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" />
+                                                <input type="hidden" value="layer_eqpt_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}_" />
 
 
                                                 {% for value in form.eqpts %}
@@ -735,7 +744,7 @@ var json_creator = new JSONCreator();
                                     <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                                         <label>definitions</label>
                                         <input type="button" value="+" onclick="addLayersReqCondUsarDefinitionsFields(this)" />
-
+                                        <input type="hidden" value="layer_def_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}_" />
                                         {% for definition in form.definitions %}
                                         <div>
                                             {% for key, value in definition.items %}
