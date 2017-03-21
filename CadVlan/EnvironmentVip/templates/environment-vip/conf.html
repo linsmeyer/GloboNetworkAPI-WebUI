@@ -49,7 +49,13 @@ $(document).ready(function() {
     json_creator.set_layers_req_counter(value);
     json_creator.set_layers_req_counter_inf(value);
 
-
+    var i = 0;
+    var array_ = $("input[name^='layers_req_cond_counter']");
+    for (i = 0; i < array_.length;  i++){
+        value = parseInt($(array_[i]).val());
+        json_creator.push_layers_req_cond_counter(value);
+        json_creator.push_layers_req_cond_counter_inf(value);
+    }
 
 
 });
@@ -62,30 +68,36 @@ String.prototype.format = function() {
     }
     return formatted;
 };
+function findMaxValue(array_, strip){
+    var i = 0;
+    var value = 0;
+    var max = 0;
+    for(i = 0; i<array_.length; i++){
+        value = parseInt($(array_[i]).attr('name').replace(strip, ''));
+        if(value > max){
+            max = value;
+        }
+
+    }
+    return max;
+
+}
 
 /* JSON Editor Chaves Functions Handlers */
 function addChavesFields(chave){
 
-    json_creator.add_chaves_counter();
-    json_creator.add_chaves_counter_inf()
-
-    var counterInf = json_creator.get_chaves_counter_inf();
+    var counterInf = findMaxValue($("input[name^='chaves_key_']"), 'chaves_key_') + 1;
 
     var div = $("<div />".format(counterInf));
-    var key = $("<input type=\"text\" id=\"chaves_key_{0}\" />".format(counterInf));
-    var value = $("<input type=\"text\" id=\"chaves_value_{0}\" />".format(counterInf));
+    var key = $("<input type=\"text\" name=\"chaves_key_{0}\" />".format(counterInf));
+    var value = $("<input type=\"text\" name=\"chaves_value_{0}\" />".format(counterInf));
     var btnRemove = $("<input type=\"button\" value=\"-\" onclick=\"removeChavesFields(this)\"/>");
 
     div.append(key);
     div.append(value);
     div.append(btnRemove);
 
-    //$("#chaves").append(div);
-
     $(chave).parent().parent().append(div);
-
-    console.log(key);
-    console.log(value);
 
 }
 
@@ -93,17 +105,10 @@ function removeChavesFields(button){
 
     $(button).parent().remove();
 
-    json_creator.sub_chaves_counter();
-
 }
 
 /* JSON Editor Layers Functions Handlers */
 function addLayersReqFields(layer_req){
-
-    json_creator.add_layers_req_counter();
-    json_creator.add_layers_req_counter_inf();
-
-    var counterInf = json_creator.get_layers_req_counter_inf();
 
     var div = $("<div class=\"ui-widget-content\" style=\"padding: 15px 15px 15px 15px;\" />");
 
@@ -118,18 +123,17 @@ function addLayersReqFields(layer_req){
 
     div.append(br);
 
-
     $(layer_req).parent().parent().append(div);
 
 }
 
 function removeLayersReqFields(layer_req){
+
     $(layer_req).parent().remove();
-    json_creator.sub_layers_req_counter();
+
 }
 
 function addLayersReqCondFields(layer_req_cond){
-    json_creator.add_layers_req_cond_counter();
 
     var span = $("<span />");
 
@@ -175,6 +179,10 @@ function removeLayersReqCondFields(layer_req_cond){
 
 function addLayersReqCondUsarFields(layer_req_cond_usar){
 
+    var str_ = $(layer_req_cond_usar).parent().children('input:hidden').val();
+
+    var counterInf = findMaxValue($("input[name^={0}]".format(str_)),str_) + 1;
+
     var span = $("<span />");
 
     var div1 = $("<div class=\"ui-widget-content\" style=\"padding: 15px 15px 15px 15px;\" />");
@@ -193,7 +201,7 @@ function addLayersReqCondUsarFields(layer_req_cond_usar){
     var btn_add_eqpts = $("<input type=\"button\" value=\"+\" onclick=\"addLayersReqCondUsarEqptsFields(this)\" />");
 
 
-    var input1 = $("<input type=\"text\" />");
+    var input1 = $("<input name=\"{0}{1}\" type=\"text\" />".format(str_, counterInf));
 
     div1_inside_inside.append(label1_eqpts);
     div1_inside_inside.append(btn_add_eqpts);
@@ -467,8 +475,8 @@ function JSONCreator(){
     this.layers_req_counter = 0;
     this.layers_req_counter_inf = 0;
 
-    this.layers_req_cond_counter = [];
-    this.layers_req_cond_counter_inf = [];
+    this.layers_req_cond_counter = {};
+    this.layers_req_cond_counter_inf = {};
 
     this.layers_req_cond_usar_counter = 0;
     this.layers_req_cond_usar_counter_inf = 0;
@@ -539,12 +547,20 @@ JSONCreator.prototype.add_layers_req_counter_inf = function () {
 
 
 /* Layers Req Cond getters and setters */
+JSONCreator.prototype.get_layers_req_cond_size = function () {
+    return Object.keys(this.layers_req_cond_counter).length ;
+};
+
+JSONCreator.prototype.get_layers_req_cond_size_inf = function () {
+    return Object.keys(this.layers_req_cond_counter_inf).length;
+};
+
 JSONCreator.prototype.get_layers_req_cond_counter = function (pos) {
     return this.layers_req_cond_counter[pos];
 };
 
-JSONCreator.prototype.push_layers_req_cond_counter = function (layers_req_cond_counter) {
-    this.layers_req_cond_counter.push(layers_req_cond_counter);
+JSONCreator.prototype.push_layers_req_cond_counter = function (pos, layers_req_cond_counter) {
+    this.layers_req_cond_counter[pos] = layers_req_cond_counter;
 };
 
 JSONCreator.prototype.add_layers_req_cond_counter = function (pos) {
@@ -559,8 +575,8 @@ JSONCreator.prototype.get_layers_req_cond_counter_inf = function (pos) {
     return this.layers_req_cond_counter_inf[pos];
 };
 
-JSONCreator.prototype.push_layers_req_cond_counter_inf = function (layers_req_cond_counter_inf) {
-    this.layers_req_cond_counter_inf.push(layers_req_cond_counter_inf);
+JSONCreator.prototype.push_layers_req_cond_counter_inf = function (pos, layers_req_cond_counter_inf) {
+    this.layers_req_cond_counter_inf[pos] = layers_req_cond_counter_inf;
 };
 
 JSONCreator.prototype.add_layers_req_cond_counter_inf = function (pos) {
@@ -642,22 +658,20 @@ var json_creator = new JSONCreator();
 		<li><span class="ui-icon ui-icon-triangle-1-e page_tab_icon"></span><a href="#tabs-1">Edição de Ambiente VIP</a></li>
 	</ul>
 	<div id="tabs-1">
-		<form id="add_form" method="post" action="{% url environment-vip.edit id_vip %}">
+		<form method="POST" action="{% url environment-vip.conf.form id_vip %}">
 			{% csrf_token %}
 			<div id="fields" class="ui-widget-content">
-				<div id="chaves" class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
+				<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 				<p>
                     Chaves
                     <input type="button" value="+" onclick="addChavesFields(this)" />
                 </p>
 
-                <input type="hidden" id="chaves_counter" value="{{ forms.keys.0.items|length }}"/>
-
                 {% for key, value in forms.keys.0.items %}
 
                     <div>
-                        <input type="text" value="{{key}}" id="chaves_key_{{ forloop.counter }}" />
-                        <input type="text" value="{{value}}" id="chaves_value_{{ forloop.counter }}" />
+                        <input type="text" value="{{key}}" name="chaves_key_{{ forloop.counter }}" />
+                        <input type="text" value="{{value}}" name="chaves_value_{{ forloop.counter }}" />
                         <input type="button" value="-" onclick="removeChavesFields(this)"/>
                     </div>
 
@@ -674,18 +688,15 @@ var json_creator = new JSONCreator();
                     </p>
 
                     <label>_name</label>
-                    <input id="layers_name" type="text" value="{{ forms.layers.0|get:'_name' }}">
+                    <input name="layers_name" type="text" value="{{ forms.layers.0|get:'_name' }}">
 
-                    <input type="hidden" id="layers_req_counter" value="{{ forms.layers.0.requiments|length }}"/>
                     {% for requiment in forms.layers.0.requiments %}
-
 
                     <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                         <input type="button" value="+" onclick="addLayersReqCondFields(this)" />
                         <input type="button" value="-" onclick="removeLayersReqFields(this)" />
                         <br />
 
-                        <input type="hidden" id="layers_req_cond_counter_{{ forloop.counter }}" value="{{ requiment.condicionals|length }}"/>
                         {% for condicional in requiment.condicionals %}
                         <span>
                         <input type="button" value="-" onclick="removeLayersReqCondFields(this)" />
@@ -693,23 +704,27 @@ var json_creator = new JSONCreator();
                         <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                             <p>Usar:</p>
                             <input type="button" value="+" onclick="addLayersReqCondUsarFields(this)" />
+
+                            <input type="hidden" value="layer_name_{{ forloop.parentloop.counter }}_{{ forloop.counter }}_" />
                             <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
-                                <input type="hidden" id="layers_req_cond_usar_counter_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" value="{{ condicional.use|length }}"/>
+
                                 {% for form in condicional.use %}
                                 <span>
                                     <input type="button" value="-" onclick="removeLayersReqCondUsarFields(this)" />
                                     <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                                         <div>
                                             <label>_name</label>
-                                            <input type="text" value="{{ form|get:'_name' }}">
+                                            <input name="layer_name_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" type="text" value="{{ form|get:'_name' }}" />
                                             <div>
                                                 <label>eqpts</label>
                                                 <input type="button" value="+" onclick="addLayersReqCondUsarEqptsFields(this)" />
                                                 <div>
-                                                <input type="hidden" id="layers_req_cond_usar_eqpts_counter_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" value="{{ form.eqpts|length }}"/>
+                                                <input type="hidden" value="layer_eqpt_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" />
+
+
                                                 {% for value in form.eqpts %}
                                                     <span>
-                                                        <input type="text" value="{{value}}">
+                                                        <input name="layer_eqpt_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" type="text" value="{{ form|get:'_name' }}" type="text" value="{{value}}">
                                                         <input type="button" value="-" onclick="removeLayersReqCondUsarEqptsFields(this)" />
                                                     </span>
                                                 {% endfor %}
@@ -720,12 +735,12 @@ var json_creator = new JSONCreator();
                                     <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                                         <label>definitions</label>
                                         <input type="button" value="+" onclick="addLayersReqCondUsarDefinitionsFields(this)" />
-                                        <input type="hidden" id="layers_req_cond_usar_definitions_counter_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" value="{{ form.definitions|length }}"/>
+
                                         {% for definition in form.definitions %}
                                         <div>
                                             {% for key, value in definition.items %}
-                                                <label>{{key}}</label>
-                                                <input type="text" value="{{value}}">
+                                                <label name="layer_def_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}_1">{{key}}</label>
+                                                <input name="layer_def_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}_2" type="text" value="{{value}}">
                                             {% endfor %}
                                             <input type="button" value="-" onclick="removeLayersReqCondUsarDefinitionsFields(this)"/>
                                         </div>
@@ -740,12 +755,11 @@ var json_creator = new JSONCreator();
                         <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                             <p>Quando:</p>
                             <input type="button" value="+" onclick="addLayersReqCondQuandoFields(this)" />
-                            <input type="hidden" id="layers_req_cond_quando_counter_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" value="{{ condicional.validations|length }}"/>
                             {% for form in condicional.validations %}
                                 <div>
                                 {% for key, value in form.items %}
-                                    <label>{{key}}</label>
-                                    <input type="text" value="{{value}}">
+                                    <label name="layer_quando_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}_1">{{key}}</label>
+                                    <input name="layer_quando_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}_2" type="text" value="{{value}}">
                                 {% endfor %}
                                 <input type="button" value="-" onclick="removeLayersReqCondQuandoFields(this)"/>
                                 </div>
