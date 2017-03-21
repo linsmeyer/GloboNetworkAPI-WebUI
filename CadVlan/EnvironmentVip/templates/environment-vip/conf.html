@@ -49,7 +49,6 @@ $(document).ready(function() {
     json_creator.set_layers_req_counter(value);
     json_creator.set_layers_req_counter_inf(value);
 
-    value = parseInt($("#layers_req_counter").val());
 
 
 
@@ -65,23 +64,25 @@ String.prototype.format = function() {
 };
 
 /* JSON Editor Chaves Functions Handlers */
-function addChavesFields(){
+function addChavesFields(chave){
 
     json_creator.add_chaves_counter();
     json_creator.add_chaves_counter_inf()
 
     var counterInf = json_creator.get_chaves_counter_inf();
 
-    var div = $("<div id=\"chaves_div_{0}\" />".format(counterInf));
+    var div = $("<div />".format(counterInf));
     var key = $("<input type=\"text\" id=\"chaves_key_{0}\" />".format(counterInf));
     var value = $("<input type=\"text\" id=\"chaves_value_{0}\" />".format(counterInf));
-    var btnRemove = $("<input id=\"chaves_btn_remove\" type=\"button\" value=\"-\" onclick=\"removeChavesFields(this)\"/>");
+    var btnRemove = $("<input type=\"button\" value=\"-\" onclick=\"removeChavesFields(this)\"/>");
 
     div.append(key);
     div.append(value);
     div.append(btnRemove);
 
-    $("#chaves").append(div);
+    //$("#chaves").append(div);
+
+    $(chave).parent().parent().append(div);
 
     console.log(key);
     console.log(value);
@@ -97,27 +98,34 @@ function removeChavesFields(button){
 }
 
 /* JSON Editor Layers Functions Handlers */
-function addLayersReqFields(){
+function addLayersReqFields(layer_req){
 
     json_creator.add_layers_req_counter();
     json_creator.add_layers_req_counter_inf();
 
     var counterInf = json_creator.get_layers_req_counter_inf();
 
-    var div = $("<div id=\"layers_div_{0}\" class=\"ui-widget-content\" style=\"padding: 15px 15px 15px 15px;\" />".format(counterInf));
+    var div = $("<div class=\"ui-widget-content\" style=\"padding: 15px 15px 15px 15px;\" />");
 
     var btnAdd = $("<input type=\"button\" value=\"+\" onclick=\"addLayersReqCondFields(this)\" />");
 
+    var btnRemoveLayerReq = $("<input type=\"button\" value=\"-\" onclick=\"removeLayersReqFields(this)\" />");
+
     div.append(btnAdd);
+    div.append(btnRemoveLayerReq);
 
     var br = $("<br />");
 
     div.append(br);
-    div.append(br);
-    div.append(br);
 
-    $("#layers").append(div);
 
+    $(layer_req).parent().parent().append(div);
+
+}
+
+function removeLayersReqFields(layer_req){
+    $(layer_req).parent().remove();
+    json_creator.sub_layers_req_counter();
 }
 
 function addLayersReqCondFields(layer_req_cond){
@@ -640,17 +648,17 @@ var json_creator = new JSONCreator();
 				<div id="chaves" class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 				<p>
                     Chaves
-                    <input type="button" value="+" onclick="addChavesFields()" />
+                    <input type="button" value="+" onclick="addChavesFields(this)" />
                 </p>
 
                 <input type="hidden" id="chaves_counter" value="{{ forms.keys.0.items|length }}"/>
 
                 {% for key, value in forms.keys.0.items %}
 
-                    <div id="chaves_div_{{ forloop.counter }}">
+                    <div>
                         <input type="text" value="{{key}}" id="chaves_key_{{ forloop.counter }}" />
                         <input type="text" value="{{value}}" id="chaves_value_{{ forloop.counter }}" />
-                        <input id="chaves_btn_remove" type="button" value="-" onclick="removeChavesFields(this)"/>
+                        <input type="button" value="-" onclick="removeChavesFields(this)"/>
                     </div>
 
 				{% endfor %}
@@ -658,39 +666,51 @@ var json_creator = new JSONCreator();
 
 				<div class="separator spacer"></div>
 
-                <div id="layers" class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
-				<p>
-                    Layers
-                    <input type="button" value="+" onclick="addLayersReqFields()" />
+                <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
+                    <p>
+                        Layers
+                        <input type="button" value="+" onclick="addLayersReqFields(this)" />
 
-                </p>
+                    </p>
 
-                <label>_name</label>
-                <input type="text" value="{{ forms.layers.0|get:'_name' }}">
+                    <label>_name</label>
+                    <input id="layers_name" type="text" value="{{ forms.layers.0|get:'_name' }}">
 
-                <input type="hidden" id="layers_req_counter" value="{{ forms.layers.0.requiments|length }}"/>
+                    <input type="hidden" id="layers_req_counter" value="{{ forms.layers.0.requiments|length }}"/>
+                    {% for requiment in forms.layers.0.requiments %}
 
-                {% for requiment in forms.layers.0.requiments %}
 
                     <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
+                        <input type="button" value="+" onclick="addLayersReqCondFields(this)" />
+                        <input type="button" value="-" onclick="removeLayersReqFields(this)" />
+                        <br />
 
                         <input type="hidden" id="layers_req_cond_counter_{{ forloop.counter }}" value="{{ requiment.condicionals|length }}"/>
                         {% for condicional in requiment.condicionals %}
+                        <span>
+                        <input type="button" value="-" onclick="removeLayersReqCondFields(this)" />
+
                         <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                             <p>Usar:</p>
+                            <input type="button" value="+" onclick="addLayersReqCondUsarFields(this)" />
                             <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
-                            {% for form in condicional.use %}
+                                <input type="hidden" id="layers_req_cond_usar_counter_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" value="{{ condicional.use|length }}"/>
+                                {% for form in condicional.use %}
                                 <span>
+                                    <input type="button" value="-" onclick="removeLayersReqCondUsarFields(this)" />
                                     <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                                         <div>
                                             <label>_name</label>
                                             <input type="text" value="{{ form|get:'_name' }}">
                                             <div>
                                                 <label>eqpts</label>
+                                                <input type="button" value="+" onclick="addLayersReqCondUsarEqptsFields(this)" />
                                                 <div>
+                                                <input type="hidden" id="layers_req_cond_usar_eqpts_counter_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" value="{{ form.eqpts|length }}"/>
                                                 {% for value in form.eqpts %}
                                                     <span>
                                                         <input type="text" value="{{value}}">
+                                                        <input type="button" value="-" onclick="removeLayersReqCondUsarEqptsFields(this)" />
                                                     </span>
                                                 {% endfor %}
                                                 </div>
@@ -699,36 +719,43 @@ var json_creator = new JSONCreator();
                                     </div>
                                     <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                                         <label>definitions</label>
+                                        <input type="button" value="+" onclick="addLayersReqCondUsarDefinitionsFields(this)" />
+                                        <input type="hidden" id="layers_req_cond_usar_definitions_counter_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" value="{{ form.definitions|length }}"/>
                                         {% for definition in form.definitions %}
                                         <div>
                                             {% for key, value in definition.items %}
                                                 <label>{{key}}</label>
                                                 <input type="text" value="{{value}}">
                                             {% endfor %}
+                                            <input type="button" value="-" onclick="removeLayersReqCondUsarDefinitionsFields(this)"/>
                                         </div>
                                         {% endfor %}
                                     </div>
 
                                     <br />
                                 </span>
-                            {% endfor %}
+                                {% endfor %}
                             </div>
                         </div>
                         <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                             <p>Quando:</p>
+                            <input type="button" value="+" onclick="addLayersReqCondQuandoFields(this)" />
+                            <input type="hidden" id="layers_req_cond_quando_counter_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" value="{{ condicional.validations|length }}"/>
                             {% for form in condicional.validations %}
                                 <div>
                                 {% for key, value in form.items %}
                                     <label>{{key}}</label>
                                     <input type="text" value="{{value}}">
                                 {% endfor %}
+                                <input type="button" value="-" onclick="removeLayersReqCondQuandoFields(this)"/>
                                 </div>
                             {% endfor %}
                         </div>
                         <br>
+                        </span>
                         {% endfor %}
                     </div>
-                {% endfor %}
+                    {% endfor %}
 				</div>
 
 				<div class="separator spacer"></div>
@@ -740,30 +767,37 @@ var json_creator = new JSONCreator();
                 </p>
 				{% for requiment in forms.optionsvip_extended.requiments %}
 					<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
+                        <input type="button" value="+" onclick="addOpcVipEstsReqCondFields(this)"/>
 						<label>_name</label>
 						<input type="text" value="{{ requiment|get:'_name' }}">
+                        <input type="button" value="-" onclick="removeOpcVipEstsReqFields(this)"/>
 						<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 							{% for condicional in requiment.condicionals %}
                                 <span>
+                                    <input type="button" value="-" onclick="removeOpcVipEstsReqCondFields(this)"/>
                                     <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                                         <p>Usar:</p>
+                                        <input type="button" value="+" onclick="addOpcVipEstsReqCondUsarFields(this)"/>
                                         {% for form in condicional.use %}
                                             <div>
                                             {% for key, value in form.items %}
                                                 <label>{{key}}</label>
                                                 <input type="text" value="{{value}}">
                                             {% endfor %}
+                                            <input type="button" value="-" onclick="removeOpcVipEstsReqCondUsarFields(this)"/>
                                             </div>
                                         {% endfor %}
                                     </div>
                                     <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                                         <p>Quando:</p>
+                                        <input type="button" value="+" onclick="addOpcVipEstsReqCondQuandoFields(this)"/>
                                         {% for form in condicional.validations %}
                                             <div>
                                             {% for key, value in form.items %}
                                                 <label>{{key}}</label>
                                                 <input type="text" value="{{value}}">
                                             {% endfor %}
+                                            <input type="button" value="-" onclick="removeOpcVipEstsReqCondQuandoFields(this)" />
                                             </div>
                                         {% endfor %}
                                     </div>
