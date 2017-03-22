@@ -41,22 +41,6 @@ $(document).ready(function() {
 	$(".pickList_remove").button({ icons: {primary: "ui-icon-arrowthick-1-n"}, text: false });
 	$(".pickList_removeAll").button({ icons: {primary: "ui-icon-arrowthickstop-1-n"}, text: false });
 
-	var value = parseInt($("#chaves_counter").val());
-	json_creator.set_chaves_counter(value);
-    json_creator.set_chaves_counter_inf(value);
-
-    value = parseInt($("#layers_req_counter").val());
-    json_creator.set_layers_req_counter(value);
-    json_creator.set_layers_req_counter_inf(value);
-
-    var i = 0;
-    var array_ = $("input[name^='layers_req_cond_counter']");
-    for (i = 0; i < array_.length;  i++){
-        value = parseInt($(array_[i]).val());
-        json_creator.push_layers_req_cond_counter(value);
-        json_creator.push_layers_req_cond_counter_inf(value);
-    }
-
 
 });
 
@@ -82,6 +66,8 @@ function findMaxValue(array_, strip){
     return max;
 
 }
+
+//TODO: Necessário adicionar os input hidden tb ao adicionar coisas
 
 /* JSON Editor Chaves Functions Handlers */
 function addChavesFields(chave){
@@ -243,15 +229,17 @@ function addLayersReqCondUsarDefinitionsFields(layer_req_cond_usar_definition){
 
     var str_ = $(layer_req_cond_usar_definition).parent().children('input:hidden').val();
 
-    var counterInf = parseInt(findMaxValue($("input[name^={0}]".format(str_)),str_)/2) + 1;
+    var counterInf = parseInt(findMaxValue($("input[name^={0}]".format(str_)),str_)) + 1;
+
+    console.log(counterInf);
 
     var div = $("<div />");
 
-    var label_type = $("<label>type</label>") ;
-    var input_type = $("<input name=\"{0}{1}\" type=\"text\" />");
+    var label_type = $("<label name=\"{0}{1}\">type</label>".format(str_, counterInf)) ;
+    var input_type = $("<input name=\"{0}{1}\" type=\"text\" />".format(str_, counterInf));
 
-    var label_value = $("<label>value</label>") ;
-    var input_value = $("<input name=\"{0}{1}\" type=\"text\" />");
+    var label_value = $("<label name=\"{0}{1}\">value</label>".format(str_, counterInf)) ;
+    var input_value = $("<input name=\"{0}{1}\" type=\"text\" />".format(str_, counterInf));
 
     var btn_remove = $("<input type=\"button\" value=\"-\" onclick=\"removeLayersReqCondUsarDefinitionsFields(this)\"/>");
 
@@ -294,21 +282,25 @@ function removeLayersReqCondUsarEqptsFields(layer_req_cond_usar_eqpt){
 
 function addLayersReqCondQuandoFields(layer_req_cond_quando){
 
+    var str_ = $(layer_req_cond_quando).parent().children('input:hidden').val();
+
+    var counterInf = parseInt(findMaxValue($("input[name^={0}]".format(str_)),str_)) + 1;
+
     var div = $("<div />");
 
     var btn_remove = $("<input type=\"button\" value=\"-\" onclick=\"removeLayersReqCondQuandoFields(this)\"/>");
 
-    var label_operator = $("<label>operator</label>") ;
-    var input_operator = $("<input type=\"text\" />");
+    var label_operator = $("<label name=\"{0}{1}\">operator</label>".format(str_,counterInf)) ;
+    var input_operator = $("<input name=\"{0}{1}\" type=\"text\" />".format(str_,counterInf));
 
-    var label_variable = $("<label>variable</label>") ;
-    var input_variable = $("<input type=\"text\" />");
+    var label_variable = $("<label name=\"{0}{1}\">variable</label>".format(str_,counterInf)) ;
+    var input_variable = $("<input name=\"{0}{1}\" type=\"text\" />".format(str_,counterInf));
 
-    var label_type = $("<label>type</label>") ;
-    var input_type = $("<input type=\"text\" />");
+    var label_type = $("<label name=\"{0}{1}\">type</label>".format(str_,counterInf)) ;
+    var input_type = $("<input name=\"{0}{1}\" type=\"text\" />".format(str_,counterInf));
 
-    var label_value = $("<label>value</label>") ;
-    var input_value = $("<input type=\"text\" />");
+    var label_value = $("<label name=\"{0}{1}\">value</label>".format(str_,counterInf)) ;
+    var input_value = $("<input name=\"{0}{1}\" type=\"text\" />".format(str_,counterInf));
 
     div.append(label_operator);
     div.append(input_operator);
@@ -321,6 +313,7 @@ function addLayersReqCondQuandoFields(layer_req_cond_quando){
     div.append(btn_remove);
 
     $(layer_req_cond_quando).parent().append(div);
+
 
 }
 
@@ -402,11 +395,15 @@ function removeOpcVipEstsReqCondFields(opcvipest_req_cond){
 
 function addOpcVipEstsReqCondUsarFields(opcvipest_req_cond_usar){
 
-    var label_type = $("<label>type</label>");
-    var input_type = $("<input type=\"text\" />");
+    var str_ = $(opcvipest_req_cond_usar).parent().children('input:hidden').val();
 
-    var label_value = $("<label>value</label>");
-    var input_value = $("<input type=\"text\" />");
+    var counterInf = parseInt(findMaxValue($("input[name^={0}]".format(str_)),str_)) + 1;
+
+    var label_type = $("<label name=\"{0}{1}\">type</label>".format(str_,counterInf));
+    var input_type = $("<input name=\"{0}{1}\" type=\"text\" />".format(str_,counterInf));
+
+    var label_value = $("<label name=\"{0}{1}\">value</label>".format(str_,counterInf));
+    var input_value = $("<input name=\"{0}{1}\" type=\"text\" />".format(str_,counterInf));
 
     var btn_remove = $("<input type=\"button\" value=\"-\" onclick=\"removeOpcVipEstsReqCondUsarFields(this)\"/>");
 
@@ -428,22 +425,26 @@ function removeOpcVipEstsReqCondUsarFields(opcvipest_req_cond_usar){
     $(opcvipest_req_cond_usar).parent().remove();
 }
 
-function addOpcVipEstsReqCondQuandoFields(opcvipest_req_cond_usar){
+function addOpcVipEstsReqCondQuandoFields(opcvipest_req_cond_quando){
 
-    var label_operator = $("<label>operator</label>");
-    var input_operator = $("<input type=\"text\" />");
+    var str_ = $(opcvipest_req_cond_quando).parent().children('input:hidden').val();
 
-    var label_variable = $("<label>variable</label>");
-    var input_variable = $("<input type=\"text\" />");
+    var counterInf = parseInt(findMaxValue($("input[name^={0}]".format(str_)),str_)) + 1;
 
-    var label_type = $("<label>type</label>");
-    var input_type = $("<input type=\"text\" />");
+    var label_operator = $("<label name=\"{0}{1}\">operator</label>".format(str_,counterInf));
+    var input_operator = $("<input name=\"{0}{1}\" type=\"text\" />".format(str_,counterInf));
 
-    var label_value = $("<label>value</label>");
-    var input_value = $("<input type=\"text\" />");
+    var label_variable = $("<label name=\"{0}{1}\">variable</label>".format(str_,counterInf));
+    var input_variable = $("<input name=\"{0}{1}\" type=\"text\" />".format(str_,counterInf));
 
-    var label_name = $("<label>name</label>");
-    var input_name = $("<input type=\"text\" />");
+    var label_type = $("<label name=\"{0}{1}\">type</label>".format(str_,counterInf));
+    var input_type = $("<input name=\"{0}{1}\" type=\"text\" />".format(str_,counterInf));
+
+    var label_value = $("<label name=\"{0}{1}\">value</label>".format(str_,counterInf));
+    var input_value = $("<input name=\"{0}{1}\" type=\"text\" />".format(str_,counterInf));
+
+    var label_name = $("<label name=\"{0}{1}\">name</label>".format(str_,counterInf));
+    var input_name = $("<input name=\"{0}{1}\" type=\"text\" />".format(str_,counterInf));
 
     var btn_remove = $("<input type=\"button\" value=\"-\" onclick=\"removeOpcVipEstsReqCondQuandoFields(this)\"/>");
 
@@ -466,196 +467,13 @@ function addOpcVipEstsReqCondQuandoFields(opcvipest_req_cond_usar){
 
     div.append(btn_remove);
 
-    $(opcvipest_req_cond_usar).parent().append(div);
+    $(opcvipest_req_cond_quando).parent().append(div);
 
 }
 
 function removeOpcVipEstsReqCondQuandoFields(opcvipest_req_cond_usar){
     $(opcvipest_req_cond_usar).parent().remove();
 }
-
-/* Class JSONCreator to json editor */
-function JSONCreator(){
-    /* Variables that ends with 'inf' means infinite. Its used to generate HTML ids.*/
-
-    this.chaves_counter = 0;
-    this.chaves_counter_inf = 0;
-
-    this.layers_req_counter = 0;
-    this.layers_req_counter_inf = 0;
-
-    this.layers_req_cond_counter = {};
-    this.layers_req_cond_counter_inf = {};
-
-    this.layers_req_cond_usar_counter = 0;
-    this.layers_req_cond_usar_counter_inf = 0;
-
-    this.layers_req_cond_quando_counter = 0;
-    this.layers_req_cond_quando_counter_inf = 0;
-
-}
-
-/* Chaves Counter getters and setters */
-JSONCreator.prototype.get_chaves_counter = function () {
-    return this.chaves_counter;
-};
-
-JSONCreator.prototype.set_chaves_counter = function (chaves_counter) {
-    this.chaves_counter = chaves_counter;
-};
-
-JSONCreator.prototype.add_chaves_counter = function () {
-    this.chaves_counter += 1;
-};
-
-JSONCreator.prototype.sub_chaves_counter = function (){
-    this.chaves_counter -= 1;
-};
-
-JSONCreator.prototype.get_chaves_counter_inf = function () {
-    return this.chaves_counter_inf;
-};
-
-JSONCreator.prototype.set_chaves_counter_inf = function (chaves_counter_inf) {
-    this.chaves_counter_inf = chaves_counter_inf;
-};
-
-JSONCreator.prototype.add_chaves_counter_inf = function () {
-    this.chaves_counter_inf += 1;
-};
-
-
-/* Layers Req getters and setters*/
-JSONCreator.prototype.get_layers_req_counter = function () {
-    return this.layers_req_counter;
-};
-
-JSONCreator.prototype.set_layers_req_counter = function (layers_req_counter) {
-    this.layers_req_counter = layers_req_counter;
-};
-
-JSONCreator.prototype.add_layers_req_counter = function () {
-    this.layers_req_counter += 1;
-};
-
-JSONCreator.prototype.sub_layers_req_counter = function (){
-    this.layers_req_counter -= 1;
-};
-
-JSONCreator.prototype.get_layers_req_counter_inf = function () {
-    return this.layers_req_counter_inf;
-};
-
-JSONCreator.prototype.set_layers_req_counter_inf = function (layers_req_counter_inf) {
-    this.layers_req_counter_inf = layers_req_counter_inf;
-};
-
-JSONCreator.prototype.add_layers_req_counter_inf = function () {
-    this.layers_req_counter_inf += 1;
-};
-
-
-/* Layers Req Cond getters and setters */
-JSONCreator.prototype.get_layers_req_cond_size = function () {
-    return Object.keys(this.layers_req_cond_counter).length ;
-};
-
-JSONCreator.prototype.get_layers_req_cond_size_inf = function () {
-    return Object.keys(this.layers_req_cond_counter_inf).length;
-};
-
-JSONCreator.prototype.get_layers_req_cond_counter = function (pos) {
-    return this.layers_req_cond_counter[pos];
-};
-
-JSONCreator.prototype.push_layers_req_cond_counter = function (pos, layers_req_cond_counter) {
-    this.layers_req_cond_counter[pos] = layers_req_cond_counter;
-};
-
-JSONCreator.prototype.add_layers_req_cond_counter = function (pos) {
-    this.layers_req_cond_counter[pos] += 1;
-};
-
-JSONCreator.prototype.sub_layers_req_cond_counter = function (pos){
-    this.layers_req_cond_counter[pos] -= 1;
-};
-
-JSONCreator.prototype.get_layers_req_cond_counter_inf = function (pos) {
-    return this.layers_req_cond_counter_inf[pos];
-};
-
-JSONCreator.prototype.push_layers_req_cond_counter_inf = function (pos, layers_req_cond_counter_inf) {
-    this.layers_req_cond_counter_inf[pos] = layers_req_cond_counter_inf;
-};
-
-JSONCreator.prototype.add_layers_req_cond_counter_inf = function (pos) {
-    this.layers_req_cond_counter_inf[pos] += 1;
-};
-
-
-/* Layers Req Cond Usar getters and setters */
-JSONCreator.prototype.get_layers_req_cond_usar_counter = function () {
-    return this.layers_req_cond_usar_counter;
-};
-
-JSONCreator.prototype.set_layers_req_cond_usar_counter = function (layers_req_cond_usar_counter) {
-    this.layers_req_cond_usar_counter = layers_req_cond_usar_counter;
-};
-
-JSONCreator.prototype.add_layers_req_cond_usar_counter = function () {
-    this.layers_req_cond_usar_counter += 1;
-};
-
-JSONCreator.prototype.sub_layers_req_cond_usar_counter = function (){
-    this.layers_req_cond_usar_counter -= 1;
-};
-
-JSONCreator.prototype.get_layers_req_cond_usar_counter_inf = function () {
-    return this.layers_req_cond_usar_counter_inf;
-};
-
-JSONCreator.prototype.set_layers_req_cond_usar_counter_inf = function (layers_req_cond_usar_counter_inf) {
-    this.layers_req_cond_usar_counter_inf = layers_req_cond_usar_counter_inf;
-};
-
-JSONCreator.prototype.add_layers_req_cond_usar_counter_inf = function () {
-    this.layers_req_cond_usar_counter_inf += 1;
-};
-
-
-/* Layers Req Cond Quando getters and setters */
-JSONCreator.prototype.get_layers_req_cond_quando_counter = function () {
-    return this.layers_req_cond_quando_counter;
-};
-
-JSONCreator.prototype.set_layers_req_cond_quando_counter = function (layers_req_cond_quando_counter) {
-    this.layers_req_cond_quando_counter = layers_req_cond_quando_counter;
-};
-
-JSONCreator.prototype.add_layers_req_cond_quando_counter = function () {
-    this.layers_req_cond_quando_counter += 1;
-};
-
-JSONCreator.prototype.sub_layers_req_cond_quando_counter = function (){
-    this.layers_req_cond_quando_counter -= 1;
-};
-
-JSONCreator.prototype.get_layers_req_cond_quando_counter_inf = function () {
-    return this.layers_req_cond_quando_counter_inf;
-};
-
-JSONCreator.prototype.set_layers_req_cond_quando_counter_inf = function (layers_req_cond_quando_counter_inf) {
-    this.layers_req_cond_quando_counter_inf = layers_req_cond_quando_counter_inf;
-};
-
-JSONCreator.prototype.add_layers_req_cond_quando_counter_inf = function () {
-    this.layers_req_cond_quando_counter_inf += 1;
-};
-
-
-var json_creator = new JSONCreator();
-
-
 
 
 </script>
@@ -748,8 +566,8 @@ var json_creator = new JSONCreator();
                                         {% for definition in form.definitions %}
                                         <div>
                                             {% for key, value in definition.items %}
-                                                <label name="layer_def_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}_1">{{key}}</label>
-                                                <input name="layer_def_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}_2" type="text" value="{{value}}">
+                                                <label name="layer_def_{{ forloop.parentloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}">{{key}}</label>
+                                                <input name="layer_def_{{ forloop.parentloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}" type="text" value="{{value}}">
                                             {% endfor %}
                                             <input type="button" value="-" onclick="removeLayersReqCondUsarDefinitionsFields(this)"/>
                                         </div>
@@ -764,11 +582,13 @@ var json_creator = new JSONCreator();
                         <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                             <p>Quando:</p>
                             <input type="button" value="+" onclick="addLayersReqCondQuandoFields(this)" />
+
+                            <input type="hidden" value="layer_quando_{{ forloop.parentloop.counter }}_{{ forloop.counter }}_" />
                             {% for form in condicional.validations %}
                                 <div>
                                 {% for key, value in form.items %}
-                                    <label name="layer_quando_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}_1">{{key}}</label>
-                                    <input name="layer_quando_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}_2" type="text" value="{{value}}">
+                                    <label name="layer_quando_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}">{{key}}</label>
+                                    <input name="layer_quando_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}" type="text" value="{{value}}">
                                 {% endfor %}
                                 <input type="button" value="-" onclick="removeLayersReqCondQuandoFields(this)"/>
                                 </div>
@@ -792,7 +612,7 @@ var json_creator = new JSONCreator();
 					<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                         <input type="button" value="+" onclick="addOpcVipEstsReqCondFields(this)"/>
 						<label>_name</label>
-						<input type="text" value="{{ requiment|get:'_name' }}">
+						<input type="text" id="opvip_name" value="{{ requiment|get:'_name' }}">
                         <input type="button" value="-" onclick="removeOpcVipEstsReqFields(this)"/>
 						<div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
 							{% for condicional in requiment.condicionals %}
@@ -801,11 +621,12 @@ var json_creator = new JSONCreator();
                                     <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                                         <p>Usar:</p>
                                         <input type="button" value="+" onclick="addOpcVipEstsReqCondUsarFields(this)"/>
+                                        <input type="hidden" value="opcvip_usar_{{ forloop.parentloop.counter }}_{{ forloop.counter }}_"   />
                                         {% for form in condicional.use %}
                                             <div>
                                             {% for key, value in form.items %}
-                                                <label>{{key}}</label>
-                                                <input type="text" value="{{value}}">
+                                                <label name="opcvip_usar_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}">{{key}}</label>
+                                                <input name="opcvip_usar_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}" type="text" value="{{value}}">
                                             {% endfor %}
                                             <input type="button" value="-" onclick="removeOpcVipEstsReqCondUsarFields(this)"/>
                                             </div>
@@ -814,11 +635,13 @@ var json_creator = new JSONCreator();
                                     <div class="ui-widget-content" style="padding: 15px 15px 15px 15px;">
                                         <p>Quando:</p>
                                         <input type="button" value="+" onclick="addOpcVipEstsReqCondQuandoFields(this)"/>
+                                        <input type="hidden" value="opcvip_quando_{{ forloop.parentloop.counter }}_{{ forloop.counter }}_"   />
+
                                         {% for form in condicional.validations %}
                                             <div>
                                             {% for key, value in form.items %}
-                                                <label>{{key}}</label>
-                                                <input type="text" value="{{value}}">
+                                                <label name="opcvip_quando_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}">{{key}}</label>
+                                                <input name="opcvip_quando_{{ forloop.parentloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.parentloop.counter }}_{{ forloop.parentloop.counter }}" type="text" value="{{value}}">
                                             {% endfor %}
                                             <input type="button" value="-" onclick="removeOpcVipEstsReqCondQuandoFields(this)" />
                                             </div>
