@@ -1,0 +1,168 @@
+{
+  "type": "object",
+  "name": "jQuery Plugins Site package.json",
+  "description": "Package manifest file for jQuery plugins. https://github.com/jquery/plugins.jquery.com/blob/master/docs/package.md",
+  "properties": {
+    "conf": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "keys": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "layers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "_name": {
+                "type": "string"
+              },
+              "requiments": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "condicionals": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "use": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "_name": {
+                                  "type": "string"
+                                },
+                                "definitions": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "tipo": {
+                                        "type": "string"
+                                      },
+                                      "valor": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  }
+                                },
+                                "eqpts": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "integer"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "validations": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "_name": {
+                                  "type": "string"
+                                },
+                                "operator": {
+                                  "type": "string"
+                                },
+                                "tipo": {
+                                  "type": "string"
+                                },
+                                "valor": {
+                                  "type": "string"
+                                },
+                                "variavel": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "optionsvip_extended": {
+          "type": "object",
+          "properties": {
+            "requiments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_name": {
+                    "type": "string"
+                  },
+                  "condicionals": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "use": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "tipo": {
+                                "type": "string"
+                              },
+                              "valor": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "validations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "_name": {
+                                "type": "string"
+                              },
+                              "operator": {
+                                "type": "string"
+                              },
+                              "tipo": {
+                                "type": "string"
+                              },
+                              "valor": {
+                                "type": "string"
+                              },
+                              "variavel": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
