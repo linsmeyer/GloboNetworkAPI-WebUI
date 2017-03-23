@@ -235,9 +235,17 @@ def conf_form(request, id_environmentvip):
             id_environmentvip,
             fields=['id', 'conf']
         ).get('environments_vip')[0]
+
         conf = json.loads(environment_vip.get("conf"))
 
-        lists['forms'] = conf.get('conf')
+        # lists['forms'] = conf.get('conf')
+
+        spec_path = 'CadVlan/EnvironmentVip/templates/environment-vip/confedit_schema.json'
+
+        with open(spec_path) as data_file:
+            lists['spec'] = json.dumps(json.load(data_file))
+
+        lists['json'] = environment_vip.get('conf')
 
     except NetworkAPIClientError, e:
         logger.error(e)
