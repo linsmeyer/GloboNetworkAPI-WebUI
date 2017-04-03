@@ -21,6 +21,8 @@
 {% block title %}[Ambiente VIP - Edição]{% endblock %}
 
 {% block header %}
+<link rel='stylesheet' href='{{ MEDIA_URL }}/css/bootstrap2.css'>
+
 <script type="text/javascript" src="{{ MEDIA_URL }}/js/jsoneditor.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
@@ -42,10 +44,22 @@ $(document).ready(function() {
 	$(".pickList_remove").button({ icons: {primary: "ui-icon-arrowthick-1-n"}, text: false });
 	$(".pickList_removeAll").button({ icons: {primary: "ui-icon-arrowthickstop-1-n"}, text: false });
 
+    JSONEditor.defaults.options.theme = 'bootstrap2';
 
-	var json = '{{ json|safe }}';
-    var jsoneditor;
+	var json = JSON.parse('{{ json|safe }}');
 
+    var schema = JSON.parse('{{ spec|safe }}');
+
+    editor = new JSONEditor(document.getElementById("editor_holder"),{
+        schema: schema
+    });
+
+    editor.setValue(json);
+    // Hook up the submit button to log to the console
+    /*document.getElementById('submit').addEventListener('click',function() {
+        // Get the value from the editor
+        console.log(editor.getValue());
+    });*/
 
 });
 
@@ -55,14 +69,18 @@ $(document).ready(function() {
 {% block content %}
 
 <div id="page_tab">
-	<ul>
+
+    <ul>
 		<li><span class="ui-icon ui-icon-triangle-1-e page_tab_icon"></span><a href="#tabs-1">Edição de Ambiente VIP</a></li>
 	</ul>
-	<div id="tabs-1">
-		<form method="POST" action="{% url environment-vip.conf.form id_vip %}">
-			{% csrf_token %}
-        </form>
+    <div class='span8 col-md-8 columns eight large-8'>
+        <h2>Editor de Conf de Ambiente Vip</h2>
+        <div id='editor_holder' ></div>
     </div>
+
+
+
+
 </div>
 
 {% endblock %}
