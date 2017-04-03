@@ -261,6 +261,8 @@ def conf_form(request, id_environmentvip):
             lists['json'] = environment_vip.get('conf')
 
     except NetworkAPIClientError, e:
+        lists['json'] = environment_vip.get('conf')
+
         logger.error(e)
         messages.add_message(request, messages.ERROR, e)
 
