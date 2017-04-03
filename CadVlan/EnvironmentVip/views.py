@@ -233,19 +233,32 @@ def conf_form(request, id_environmentvip):
 
         environment_vip = client.create_api_environment_vip().get_environment_vip(
             id_environmentvip,
-            fields=['id', 'conf']
+            fields=['id', 'conf', 'finalidade_txt', 'cliente_txt',
+                    'ambiente_p44_txt', 'description', 'name']
         ).get('environments_vip')[0]
 
-        conf = json.loads(environment_vip.get("conf"))
+        if request.method == "POST":
 
-        # lists['forms'] = conf.get('conf')
+            environment_vip['conf'] = request.POST.get('json_changed')
+            client.create_api_environment_vip().update([environment_vip])
 
-        spec_path = 'CadVlan/EnvironmentVip/templates/environment-vip/confedit_schema.json'
+            messages.add_message(
+                request, messages.SUCCESS, environment_vip_messages.get('success_edit_conf'))
 
-        with open(spec_path) as data_file:
-            lists['spec'] = json.dumps(json.load(data_file))
+            return redirect('environment-vip.list')
 
-        lists['json'] = environment_vip.get('conf')
+        else:
+
+            conf = json.loads(environment_vip.get('conf'))
+
+            # lists['forms'] = conf.get('conf')
+
+            spec_path = 'CadVlan/EnvironmentVip/templates/environment-vip/confedit_schema.json'
+
+            with open(spec_path) as data_file:
+                lists['spec'] = json.dumps(json.load(data_file))
+
+            lists['json'] = environment_vip.get('conf')
 
     except NetworkAPIClientError, e:
         logger.error(e)

@@ -1,14 +1,8 @@
 {
   "type": "object",
-  "options": {
-    "collapsed": true
-  },
   "properties": {
     "conf": {
       "type": "object",
-      "options": {
-        "collapsed": true
-      },
       "required": true,
       "properties": {
         "keys": {
@@ -27,9 +21,6 @@
         },
         "layers": {
           "type": "array",
-          "options": {
-            "collapsed": true
-          },
           "items": {
             "type": "object",
             "options": {
@@ -45,9 +36,6 @@
                 "propertyOrder": 2,
                 "items": {
                   "type": "object",
-                  "options": {
-                    "collapsed": true
-                  },
                   "properties": {
                     "condicionals": {
                       "type": "array",
@@ -151,29 +139,19 @@
         },
         "optionsvip_extended": {
           "type": "object",
-          "options": {
-            "collapsed": true
-          },
           "properties": {
             "requiments": {
               "type": "array",
-              "options": {
-                "collapsed": true
-              },
               "items": {
                 "type": "object",
-                "options": {
-                  "collapsed": true
-                },
                 "properties": {
                   "_name": {
-                    "type": "string"
+                    "type": "string",
+                    "propertyOrder": 1
                   },
                   "condicionals": {
                     "type": "array",
-                    "options": {
-                      "collapsed": true
-                    },
+                    "propertyOrder": 2,
                     "items": {
                       "type": "object",
                       "options": {
