@@ -471,7 +471,7 @@ h6,
   background: -o-linear-gradient(#0D84A5, white); /* For Opera 11.1 to 12.0 */
   background: -moz-linear-gradient(#0D84A5, white); /* For Firefox 3.6 to 15 */
   background: linear-gradient(#0D84A5, white); /* Standard syntax (must be last) */
-  height: 65px
+  height: 65px;
 }
 #menu-8 .bg-color.transparent .link {
   color: #2b3882;

@@ -52,69 +52,57 @@ def login(request):
 
     if request.method == 'POST':
 
-        form = LoginForm(request.POST)
         form_pass = PassForm()
 
-        if form.is_valid():
+        try:
 
-            try:
+            client = ClientFactory(
+                NETWORK_API_URL, NETWORK_API_USERNAME, NETWORK_API_PASSWORD)
 
-                client = ClientFactory(
-                    NETWORK_API_URL, NETWORK_API_USERNAME, NETWORK_API_PASSWORD)
+            user = client.create_usuario().authenticate( request.POST.get('user_name'), request.POST.get('user_password'), False)
 
-                user = client.create_usuario().authenticate(form.cleaned_data[
-                    'username'], form.cleaned_data['password'], form.cleaned_data['is_ldap_user'])
-
-                if user is None:
-                    messages.add_message(
-                        request, messages.ERROR, auth_messages.get("user_invalid"))
-
-                else:
-
-                    request.session.set_expiry(SESSION_EXPIRY_AGE)
-
-                    auth = AuthSession(request.session)
-                    # auth.login(User(**user.get('user')))
-
-                    user = user.get('user')
-
-                    if user.get('permission') is None:
-                        messages.add_message(
-                            request, messages.ERROR, auth_messages.get("nogroup_error"))
-                        return render_to_response(templates.LOGIN, {'form': form, 'form_pass': form_pass, 'modal': modal_auto_open}, context_instance=RequestContext(request))
-
-                    auth.login(User(user.get('id'), user.get('user'), user.get('nome'), user.get(
-                        'email'), user.get('pwd'), user.get('permission'), user.get('ativo'), user.get('user_ldap')))
-
-                    if form.cleaned_data['redirect'] != "":
-                        return HttpResponseRedirect(form.cleaned_data['redirect'])
-
-                    return HttpResponseRedirect(URL_HOME)
-
-            except InvalidParameterError, e:
-                logger.error(e)
+            if user is None:
                 messages.add_message(
                     request, messages.ERROR, auth_messages.get("user_invalid"))
 
-            except NetworkAPIClientError, e:
-                logger.error(e)
-                messages.add_message(request, messages.ERROR, e)
+            else:
 
-            except LDAPNotFoundError, e:
-                logger.error(e)
-                messages.add_message(
-                    request, messages.ERROR, auth_messages.get("user_ldap_not_found"))
+                request.session.set_expiry(SESSION_EXPIRY_AGE)
 
-            except Exception, e:
-                logger.error(e)
-                user = {}
-                messages.add_message(
-                    request, messages.ERROR, auth_messages.get("500"))
+                auth = AuthSession(request.session)
 
-            return render_to_response(templates.LOGIN, {'form': form, 'form_pass': form_pass, 'modal': modal_auto_open}, context_instance=RequestContext(request))
+                user = user.get('user')
 
-        else:
-            return render_to_response(templates.LOGIN, {'form': form, 'form_pass': form_pass, 'modal': modal_auto_open}, context_instance=RequestContext(request))
+                if user.get('permission') is None:
+                    messages.add_message(
+                        request, messages.ERROR, auth_messages.get("nogroup_error"))
+                    return render_to_response(templates.ABOUT, {'form_pass': form_pass, 'modal': modal_auto_open}, context_instance=RequestContext(request))
+
+                auth.login(User(user.get('id'), user.get('user'), user.get('nome'), user.get(
+                    'email'), user.get('pwd'), user.get('permission'), user.get('ativo'), user.get('user_ldap')))
+
+                return HttpResponseRedirect(URL_HOME)
+
+        except InvalidParameterError, e:
+            logger.error(e)
+            messages.add_message(
+                request, messages.ERROR, auth_messages.get("user_invalid"))
+
+        except NetworkAPIClientError, e:
+            logger.error(e)
+            messages.add_message(request, messages.ERROR, e)
+
+        except LDAPNotFoundError, e:
+            logger.error(e)
+            messages.add_message(
+                request, messages.ERROR, auth_messages.get("user_ldap_not_found"))
+
+        except Exception, e:
+            logger.error(e)
+            messages.add_message(
+                request, messages.ERROR, auth_messages.get("500"))
+
+        return render_to_response(templates.ABOUT, {'form_pass': form_pass, 'modal': modal_auto_open}, context_instance=RequestContext(request))
 
     else:
 
@@ -123,13 +111,9 @@ def login(request):
         if auth.is_authenticated():
             return HttpResponseRedirect(URL_HOME)
 
-        form = LoginForm()
         form_pass = PassForm()
 
-        if request.GET is not None:
-            form.fields['redirect'].initial = request.GET.get('redirect')
-
-        return render_to_response(templates.LOGIN, {'form': form, 'form_pass': form_pass, 'modal': modal_auto_open}, context_instance=RequestContext(request))
+        return render_to_response(templates.ABOUT, {'form_pass': form_pass, 'modal': modal_auto_open}, context_instance=RequestContext(request))
 
 
 @log
